@@ -1,0 +1,6 @@
+[ 2025-08-10 15:56:39,950 ] 1025 httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
+[ 2025-08-10 15:56:39,957 ] 107 dagshub - INFO - Accessing as somen2003
+[ 2025-08-10 15:56:40,632 ] 1025 httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/repos/somen2003/NetworkSecurity-Final "HTTP/1.1 200 OK"
+[ 2025-08-10 15:56:41,257 ] 1025 httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
+[ 2025-08-10 15:56:41,261 ] 107 dagshub - INFO - Initialized MLflow to track repo "somen2003/NetworkSecurity-Final"
+[ 2025-08-10 15:56:41,262 ] 107 dagshub - INFO - Repository somen2003/NetworkSecurity-Final initialized!

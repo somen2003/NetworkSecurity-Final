@@ -16,6 +16,8 @@ Requires-Dist: dagshub
 Requires-Dist: fastapi
 Requires-Dist: uvicorn
 Requires-Dist: python-multipart
+Requires-Dist: streamlit
+Requires-Dist: plotly
 Dynamic: author
 Dynamic: author-email
 Dynamic: requires-dist

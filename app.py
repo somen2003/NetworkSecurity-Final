@@ -1,88 +1,81 @@
-import sys
+import streamlit as st
+import pandas as pd
 import os
-
+import sys
 import certifi
-ca = certifi.where()
-
 from dotenv import load_dotenv
+import pymongo
+
+from networksecurity.exception.exception import NetworkSecurityException
+from networksecurity.pipeline.training_pipeline import TrainingPipeline
+from networksecurity.utils.main_utils.utils import load_object
+from networksecurity.utils.ml_utils.model.estimator import NetworkModel
+from networksecurity.constant.training_pipeline import DATA_INGESTION_COLLECTION_NAME, DATA_INGESTION_DATABASE_NAME
+
+# Load environment variables
 load_dotenv()
 mongo_db_url = os.getenv("MONGODB_URL_KEY")
-print(mongo_db_url)
-import pymongo
-from networksecurity.exception.exception import NetworkSecurityException
-from networksecurity.logging.logger import logging
-from networksecurity.pipeline.training_pipeline import TrainingPipeline
+ca = certifi.where()
 
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi import FastAPI, File, UploadFile,Request
-from uvicorn import run as app_run
-from fastapi.responses import Response
-from starlette.responses import RedirectResponse
-import pandas as pd
-
-from networksecurity.utils.main_utils.utils import load_object
-
-from networksecurity.utils.ml_utils.model.estimator import NetworkModel
-
-
+# Connect to MongoDB (if needed)
 client = pymongo.MongoClient(mongo_db_url, tlsCAFile=ca)
-
-from networksecurity.constant.training_pipeline import DATA_INGESTION_COLLECTION_NAME
-from networksecurity.constant.training_pipeline import DATA_INGESTION_DATABASE_NAME
-
 database = client[DATA_INGESTION_DATABASE_NAME]
 collection = database[DATA_INGESTION_COLLECTION_NAME]
 
-app = FastAPI()
-origins = ["*"]
+st.set_page_config(page_title="Phishing URL Detection", layout="wide")
+st.title("🔍 Phishing URL Detection")
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-from fastapi.templating import Jinja2Templates
-templates = Jinja2Templates(directory="./templates")
-
-@app.get("/", tags=["authentication"])
-async def index():
-    return RedirectResponse(url="/docs")
-
-@app.get("/train")
-async def train_route():
+# -------- Train Model --------
+if st.button("Train Model"):
     try:
-        train_pipeline=TrainingPipeline()
+        train_pipeline = TrainingPipeline()
         train_pipeline.run_pipeline()
-        return Response("Training is successful")
+        st.success("✅ Model training completed successfully!")
     except Exception as e:
-        raise NetworkSecurityException(e,sys)
-    
-@app.post("/predict")
-async def predict_route(request: Request,file: UploadFile = File(...)):
-    try:
-        df=pd.read_csv(file.file)
-        #print(df)
-        preprocesor=load_object("final_model/preprocessor.pkl")
-        final_model=load_object("final_model/model.pkl")
-        network_model = NetworkModel(preprocessor=preprocesor,model=final_model)
-        print(df.iloc[0])
-        y_pred = network_model.predict(df)
-        print(y_pred)
-        df['predicted_column'] = y_pred
-        print(df['predicted_column'])
-        #df['predicted_column'].replace(-1, 0)
-        #return df.to_json()
-        df.to_csv('prediction_output/output.csv')
-        table_html = df.to_html(classes='table table-striped')
-        #print(table_html)
-        return templates.TemplateResponse("table.html", {"request": request, "table": table_html})
-        
-    except Exception as e:
-            raise NetworkSecurityException(e,sys)
+        st.error(f"❌ Training failed: {e}")
 
-    
-if __name__=="__main__":
-    app_run(app,host="localhost",port=8000)
+# -------- Prediction Section --------
+uploaded_file = st.file_uploader("Upload CSV file for prediction", type=["csv"])
+
+if uploaded_file is not None:
+    try:
+        df = pd.read_csv(uploaded_file)
+
+        # Load saved preprocessor and model
+        preprocessor = load_object("final_model/preprocessor.pkl")
+        final_model = load_object("final_model/model.pkl")
+        network_model = NetworkModel(preprocessor=preprocessor, model=final_model)
+
+        # Predict
+        y_pred = network_model.predict(df)
+        df["predicted_column"] = y_pred
+
+        # Map predictions for readability
+        mapping = {1: "Phishy", 0: "Non-Phishy", -1: "Non-Phishy"}
+        df["Prediction Label"] = df["predicted_column"].map(mapping)
+
+        # Count results
+        phishy_count = (df["Prediction Label"] == "Phishy").sum()
+        non_phishy_count = (df["Prediction Label"] == "Non-Phishy").sum()
+
+        # Display counts
+        st.subheader("📊 Prediction Summary")
+        col1, col2 = st.columns(2)
+        col1.metric("Phishy URLs", phishy_count)
+        col2.metric("Non-Phishy URLs", non_phishy_count)
+
+        # Show table
+        st.subheader("📄 Predictions Table")
+        st.dataframe(df)
+
+        # Download results
+        csv = df.to_csv(index=False).encode("utf-8")
+        st.download_button(
+            label="⬇ Download Predictions",
+            data=csv,
+            file_name="predictions.csv",
+            mime="text/csv"
+        )
+
+    except Exception as e:
+        st.error(f"❌ Prediction failed: {e}")

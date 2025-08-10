@@ -1,0 +1,30 @@
+[ 2025-08-10 15:57:14,708 ] 1025 httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
+[ 2025-08-10 15:57:14,726 ] 107 dagshub - INFO - Accessing as somen2003
+[ 2025-08-10 15:57:15,244 ] 1025 httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/repos/somen2003/NetworkSecurity-Final "HTTP/1.1 200 OK"
+[ 2025-08-10 15:57:15,786 ] 1025 httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
+[ 2025-08-10 15:57:15,793 ] 107 dagshub - INFO - Initialized MLflow to track repo "somen2003/NetworkSecurity-Final"
+[ 2025-08-10 15:57:15,796 ] 107 dagshub - INFO - Repository somen2003/NetworkSecurity-Final initialized!
+[ 2025-08-10 15:57:27,769 ] 42 root - INFO - Start data Ingestion
+[ 2025-08-10 15:57:33,087 ] 65 root - INFO - Performed train test split on the dataframe
+[ 2025-08-10 15:57:33,087 ] 67 root - INFO - Exited split_data_as_train_test method of Data_Ingestion class
+[ 2025-08-10 15:57:33,089 ] 75 root - INFO - Exporting train and test file path.
+[ 2025-08-10 15:57:33,351 ] 84 root - INFO - Exported train and test file path.
+[ 2025-08-10 15:57:33,353 ] 45 root - INFO - Data Ingestion completed and artifact: DataIngestionArtifact(trained_file_path='Artifacts\\08_10_2025_15_57_10\\data_ingestion\\ingested\\train.csv', test_file_path='Artifacts\\08_10_2025_15_57_10\\data_ingestion\\ingested\\test.csv')
+[ 2025-08-10 15:57:33,393 ] 55 root - INFO - Initiate the data Validation
+[ 2025-08-10 15:57:33,589 ] 32 root - INFO - Required number of columns:2
+[ 2025-08-10 15:57:33,590 ] 33 root - INFO - Data frame has columns:31
+[ 2025-08-10 15:57:33,590 ] 32 root - INFO - Required number of columns:2
+[ 2025-08-10 15:57:33,591 ] 33 root - INFO - Data frame has columns:31
+[ 2025-08-10 15:57:34,304 ] 63 root - INFO - Entered initiate_data_transformation method of DataTransformation class
+[ 2025-08-10 15:57:34,305 ] 65 root - INFO - Starting data transformation
+[ 2025-08-10 15:57:34,410 ] 48 root - INFO - Entered get_data_trnasformer_object method of Trnasformation class
+[ 2025-08-10 15:57:34,411 ] 53 root - INFO - Initialise KNNImputer with {'missing_values': nan, 'n_neighbors': 3, 'weights': 'uniform'}
+[ 2025-08-10 15:57:34,463 ] 46 root - INFO - Entered the save_object method of MainUtils class
+[ 2025-08-10 15:57:34,469 ] 50 root - INFO - Exited the save_object method of MainUtils class
+[ 2025-08-10 15:57:34,471 ] 46 root - INFO - Entered the save_object method of MainUtils class
+[ 2025-08-10 15:57:34,483 ] 50 root - INFO - Exited the save_object method of MainUtils class
+[ 2025-08-10 16:05:43,222 ] 46 root - INFO - Entered the save_object method of MainUtils class
+[ 2025-08-10 16:05:43,228 ] 50 root - INFO - Exited the save_object method of MainUtils class
+[ 2025-08-10 16:05:43,228 ] 46 root - INFO - Entered the save_object method of MainUtils class
+[ 2025-08-10 16:05:43,422 ] 50 root - INFO - Exited the save_object method of MainUtils class
+[ 2025-08-10 16:05:43,422 ] 151 root - INFO - Model trainer artifact: ModelTrainerArtifact(trained_model_file_path='Artifacts\\08_10_2025_15_57_10\\model_trainer\\trained_model\\model.pkl', train_metric_artifact=ClassificationMetricArtifact(f1_score=0.9913573970513472, precision_score=0.9886432772257149, recall_score=0.9940864600326265), test_metric_artifact=ClassificationMetricArtifact(f1_score=0.9761715647339158, precision_score=0.9715415019762846, recall_score=0.9808459696727854))
