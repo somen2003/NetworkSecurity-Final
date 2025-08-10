@@ -1,0 +1,10 @@
+artifact_location: file:///C:/Users/KIIT/Desktop/Final%20Projects/Network%20Security%20Final/mlruns/0/models/m-4bce11a3f2744c6db17ad375d11931a7/artifacts
+creation_timestamp: 1754807968083
+experiment_id: '0'
+last_updated_timestamp: 1754807973987
+model_id: m-4bce11a3f2744c6db17ad375d11931a7
+model_type: null
+name: model
+source_run_id: 2807e150c3ca4477aaa400cdbaeef942
+status: 2
+status_message: null
